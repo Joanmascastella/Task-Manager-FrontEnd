@@ -1,23 +1,27 @@
 <template>
-    <section>
-      <div class="container">
-        <h1 v-if="login">Welcome {{ user.username }}</h1>
-        <h1 v-else>Welcome</h1>
-        <TaskView />
-      </div>
-    </section>
-  </template>
-  
-  <script>
-  
-  export default {
-    name: "Home",
- 
-    props: {
-      user: Object
-    }
-  };
-  </script>
+  <section>
+    <div class="container">
+      <h1 v-if="authStore.user">Welcome, {{ authStore.user.username }}</h1>
+      <h1 v-else>Welcome</h1>
+      <!-- TaskView component will go here -->
+    </div>
+  </section>
+</template>
+
+<script>
+import { useAuthStore } from '@/store/auth.js';
+
+export default {
+  name: "Home",
+  setup() {
+    const authStore = useAuthStore();
+    
+    // Expose the authStore to the template
+    return { authStore };
+  },
+};
+</script>
+
   
   <style scoped>
   .container {

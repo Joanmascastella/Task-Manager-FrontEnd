@@ -19,6 +19,9 @@
 </template>
 
 <script>
+import { useAuthStore } from '@/store/auth.js';
+
+
 export default {
   name: "Login",
   data() {
@@ -27,23 +30,28 @@ export default {
       inputPassword: ''
     };
   },
+  setup() {
+    const authStore = useAuthStore();
+    return {
+      authStore
+    };
+  },
   methods: {
     async onSubmit() {
       const loginData = {
         email: this.inputEmail,
-        password: this.inputPassword, 
+        password_hash: this.inputPassword,
       };
 
       try {
         const response = await this.$axios.post('/login', loginData);
-        this.$store.auth.setUser(response.data); 
-        this.$router.push('/'); 
+        this.authStore.setUser(response.data);
+        this.$router.push('/');
       } catch (error) {
         console.error("Login error:", error.response.data);
       }
     }
   }
-
 };
 </script>
 
