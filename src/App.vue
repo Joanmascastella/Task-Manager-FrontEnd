@@ -1,18 +1,22 @@
-<template>
-  <navigation />
-  <router-view />
-</template>
-
 <script>
-import Navigation from './components/Navigation.vue'
+import Navigation from './components/Navigation.vue';
+import Footer from './components/footer.vue'
 
 export default {
   name: "App",
   components: {
-    Navigation
+    Navigation,
+    Footer
+
   }
 };
 </script>
 
-<style>
+<template>
+  <navigation />
+  <router-view></router-view>
+  <Footer/>
+</template> 
+
+<style scoped>
 </style>
