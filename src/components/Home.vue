@@ -10,8 +10,18 @@
       <AdminDashboard />
     </div>
 
-    <div v-else-if="authStore.user && authStore.user.role === 'user'">
+    <div v-else-if="authStore.user && authStore.user.role === 'user'" class="A-Container">
       <h1 class="welcome-message">Welcome, {{ authStore.user.username }}.</h1>
+
+      <div class="col-lg-4">
+        <div class="analytics-container">
+          <h2 class="dashboard-subtitle">Analytics</h2>
+          <div>
+            <TotalTasks />
+            <CompletedTasks />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -19,11 +29,15 @@
 <script>
 import { useAuthStore } from '@/store/auth.js';
 import AdminDashboard from '@/components/dashboard/AdminDashboard.vue';
+import CompletedTasks from '@/components/User-Analytics/CompletedTasks.vue'; 
+import TotalTasks from '@/components/User-Analytics/TotalTasks.vue'; 
 
 export default {
   name: "Home",
   components: {
-    AdminDashboard, 
+    AdminDashboard,
+    CompletedTasks,
+    TotalTasks,
   },
   setup() {
     const authStore = useAuthStore();
@@ -91,7 +105,7 @@ p {
   background-color: #e0e0e0;
 }
 
-.analytics-container {
+.A-Container {
   text-align: center;
   padding: 20px;
 }
@@ -99,5 +113,15 @@ p {
 .welcome-message {
   margin-bottom: 20px;
   color: #000000;
+}
+.analytics-container {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.analytics-row {
+  display: flex;
+  flex-direction: column; 
+  gap: 20px;
 }
 </style>

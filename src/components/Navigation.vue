@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-md navbar-dark mb-4">
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">Task Manager</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navcollapsible"
@@ -9,15 +9,15 @@
       <div class="collapse navbar-collapse" id="navcollapsible">
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
           <li class="nav-item">
-            <a class="nav-link" active-class="active" href="/">Home</a>
+            <router-link to="/" class="nav-link" active-class="active">Home</router-link>
           </li>
         </ul>
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav">
           <li v-if="authStore.user && authStore.user.role === 'user'" class="nav-item">
-            <a class="nav-link" active-class="active" href="/user-dashboard">User Dashboard</a>
+            <router-link to="/user-dashboard" class="nav-link" active-class="active">User Dashboard</router-link>
           </li>
-          <li v-if="authStore.user" class="nav-item btn btn-danger">
-            <a class="nav-link" active-class="active" @click="logout">Logout</a>
+          <li v-if="authStore.user" class="nav-item">
+            <a class="nav-link btn btn-danger" style="color: white;" @click="logout">Logout</a>
           </li>
         </ul>
       </div>
@@ -52,8 +52,6 @@ export default {
   background-color: #000000;
   margin-bottom: 0 !important; 
 }
-
-
-
 </style>
+
 
