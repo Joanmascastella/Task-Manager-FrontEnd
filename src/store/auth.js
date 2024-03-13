@@ -14,23 +14,28 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
     token: null,
+    refreshToken: null
   }),
   actions: {
+    // In auth.js store action
     setUser(userData) {
-
       this.user = {
-        jwt: userData.jwt,
-        id: userData.user_id,
+        id: userData.id,
         username: userData.username,
         role: userData.role,
       };
-      this.token = userData.jwt;
-      localStorage.setItem('authToken', userData.jwt);
+      this.token = userData.authToken; 
+      this.refreshToken = userData.refreshToken; 
+      localStorage.setItem('authToken', userData.authToken);
+      localStorage.setItem('refreshToken', userData.refreshToken);
     },
+
     logout() {
       this.user = null;
       this.token = null;
+      this.refreshToken = null;
       localStorage.removeItem('authToken');
+      localStorage.removeItem('refreshToken');
     },
     checkUser() {
       const token = localStorage.getItem('authToken');
@@ -39,8 +44,7 @@ export const useAuthStore = defineStore('auth', {
         try {
           const decoded = decodeToken(token);
           this.user = {
-            jwt: token,
-            id: decoded.data.user_id,
+            id: decoded.data.id,
             username: decoded.data.username,
             role: decoded.data.role,
           };
@@ -49,11 +53,10 @@ export const useAuthStore = defineStore('auth', {
         }
       }
     },
-
-
   },
   getters: {
     isAdmin: (state) => state.user?.role === 'admin',
     isUser: (state) => state.user?.role === 'user',
+    userId: (state) => state.user?.id,
   },
 });

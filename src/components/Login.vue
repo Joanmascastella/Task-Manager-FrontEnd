@@ -46,7 +46,13 @@ export default {
 
       try {
         const response = await this.$axios.post('/login', loginData);
-        this.authStore.setUser(response.data);
+        this.authStore.setUser({
+          authToken: response.data.authToken,
+          refreshToken: response.data.refreshToken,
+          id: response.data.id, 
+          username: this.inputEmail,
+          role: response.data.role, 
+        });
         this.$router.push('/');
       } catch (error) {
         console.error("Login error:", error.response.data);
@@ -72,12 +78,12 @@ export default {
 
 .login-container {
   background-color: #ffffff;
-  padding: 40px; 
+  padding: 40px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: 50%;
-  max-width: 600px; 
-  min-width: 300px; 
+  max-width: 600px;
+  min-width: 300px;
   text-align: center;
   margin: 0 auto;
 }
@@ -85,19 +91,19 @@ export default {
 .form-label {
   display: block;
   color: #212529;
-  margin-bottom: 0.5rem; 
+  margin-bottom: 0.5rem;
 }
 
 .form-control {
-  width: calc(100% - 1.5rem); 
-    padding: 0.375rem 0.75rem;
+  width: calc(100% - 1.5rem);
+  padding: 0.375rem 0.75rem;
   margin-bottom: 1rem;
 }
 
 .btn-primary,
 .btn-outline-primary {
   width: 48%;
-  margin-top: 1rem; 
+  margin-top: 1rem;
 }
 
 .d-flex {
@@ -109,8 +115,7 @@ export default {
 @media (max-width: 768px) {
   .login-container {
     width: 80%;
-    padding: 20px; 
+    padding: 20px;
   }
 }
 </style>
-
