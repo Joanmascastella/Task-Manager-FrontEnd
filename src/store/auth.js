@@ -20,6 +20,7 @@ export const useAuthStore = defineStore('auth', {
 
       this.user = {
         jwt: userData.jwt,
+        id: userData.user_id,
         username: userData.username,
         role: userData.role,
       };
@@ -39,6 +40,7 @@ export const useAuthStore = defineStore('auth', {
           const decoded = decodeToken(token);
           this.user = {
             jwt: token,
+            id: decoded.data.user_id,
             username: decoded.data.username,
             role: decoded.data.role,
           };
