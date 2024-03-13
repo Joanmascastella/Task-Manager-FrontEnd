@@ -1,26 +1,33 @@
 <template>
-  <div v-if="!authStore.token" class="landing-page">
-    <h1>Welcome to the Task Manager</h1>
-    <p>Are you ready to organize your future? Please <router-link to="/login">login</router-link> or <router-link to="/register">register</router-link> to continue.</p>
+  <div>
+    <div v-if="!authStore.token" class="landing-page">
+      <h1>Welcome to the Task Manager</h1>
+      <p>Are you ready to organize your future? Please <router-link to="/login">login</router-link> or <router-link
+          to="/register">register</router-link> to continue.</p>
+    </div>
 
-  </div>
-  <div v-else class="container">
-    <h1>Welcome, {{ authStore.user ? authStore.user.username : '' }}</h1>
+    <div v-else-if="authStore.user && authStore.user.role === 'admin'" class="analytics-container">
+      <AdminDashboard />
+    </div>
+
+    <div v-else-if="authStore.user && authStore.user.role === 'user'">
+      <h1 class="welcome-message">Welcome, {{ authStore.user.username }}.</h1>
+    </div>
   </div>
 </template>
 
 <script>
 import { useAuthStore } from '@/store/auth.js';
+import AdminDashboard from '@/components/dashboard/AdminDashboard.vue';
 
 export default {
-
   name: "Home",
   components: {
-
+    AdminDashboard, 
   },
   setup() {
     const authStore = useAuthStore();
-  
+
     return { authStore };
   },
 };
@@ -57,34 +64,40 @@ export default {
   right: 0;
   bottom: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.5); 
+  background: rgba(0, 0, 0, 0.5);
   z-index: 0;
 }
 
-h1, p {
+h1,
+p {
   color: white;
   position: relative;
-  z-index: 1; 
+  z-index: 1;
   font-family: 'Arial', sans-serif;
   margin-bottom: 20px;
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
 }
 
-
 .router-link {
-  background-color: white; 
+  background-color: white;
   padding: 10px;
   border-radius: 5px;
   text-decoration: none;
-  color: #0056b3; 
+  color: #0056b3;
   margin: 0 5px;
 }
 
 .router-link:hover {
-  color: #00376b; 
-  background-color: #e0e0e0; 
+  color: #00376b;
+  background-color: #e0e0e0;
 }
 
+.analytics-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.welcome-message {
+  margin-bottom: 20px;
+  color: #000000;
+}
 </style>
-
-

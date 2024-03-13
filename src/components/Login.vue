@@ -54,8 +54,9 @@ export default {
           this.authStore.setUser({
             authToken: response.data.authToken,
             refreshToken: response.data.refreshToken,
-            id: response.data.id, 
-            username: this.inputEmail,
+            id: response.data.id,
+            username: response.data.name, 
+            email: this.inputEmail,
             role: response.data.role, 
           });
           this.feedback = "Login successful!";

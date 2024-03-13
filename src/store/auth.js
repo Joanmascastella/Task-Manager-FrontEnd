@@ -21,7 +21,8 @@ export const useAuthStore = defineStore('auth', {
     setUser(userData) {
       this.user = {
         id: userData.id,
-        username: userData.username,
+        username: userData.name,
+        email: userData.email,
         role: userData.role,
       };
       this.token = userData.authToken; 

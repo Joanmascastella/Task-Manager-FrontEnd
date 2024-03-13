@@ -1,30 +1,52 @@
 <template>
-  <div class="admin-dashboard">
+  <div class="admin-dashboard container-fluid">
     <h1 class="dashboard-title">Admin Dashboard</h1>
-    <table class="table table-hover mt-4">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(user, index) in users" :key="user.user_id">
-          <td>{{ index + 1 }}</td>
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.role }}</td>
-          <td>
-            <button @click="prepareEditModal(user)" class="btn btn-primary" style="margin-right: 10px;">Edit</button>
-            <button @click="deleteAccount(user.user_id)" class="btn btn-danger">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="analytics-container">
+          <h2 class="dashboard-subtitle">Analytics</h2>
+          <p>Current analytics of the website user base </p>
+          <div>
+            <ActiveUsers />
+            <TotalTasks />
+            <CompletedTasks />
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="user-table-container">
+          <h2 class="dashboard-subtitle">Active users</h2>
+          <p>Edit user details</p>
+          <div class="table-responsive"> 
+            <table class="table table-hover mt-4">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(user, index) in users" :key="user.user_id">
+                  <td>{{ index + 1 }}</td>
+                  <td>{{ user.name }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.role }}</td>
+                  <td>
+                    <button @click="prepareEditModal(user)" class="btn btn-primary" style="margin-right: 10px;">Edit</button>
+                    <button @click="deleteAccount(user.user_id)" class="btn btn-danger">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <!-- Modal -->
     <div class="modal custom-modal" :class="{ 'show': showModal }" tabindex="-1" role="dialog" v-show="showModal">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -55,16 +77,26 @@
         </div>
       </div>
     </div>
-  </div>
-  <div v-if="feedbackMessage" :class="['feedback', { 'success': isSuccess, 'error': !isSuccess }]">
-    {{ feedbackMessage }}
+
+    <!-- Feedback Message -->
+    <div v-if="feedbackMessage" :class="['feedback', { 'success': isSuccess, 'error': !isSuccess }]">
+      {{ feedbackMessage }}
+    </div>
   </div>
 </template>
 
-
 <script>
+import ActiveUsers from '../Analytics/ActiveUsers.vue';
+import TotalTasks from '../Analytics/TotalTasks.vue';
+import CompletedTasks from '../Analytics/CompletedTasks.vue';
+
 export default {
   name: "AdminDashboard",
+  components: {
+    ActiveUsers,
+    TotalTasks,
+    CompletedTasks,
+  },
   data() {
     return {
       users: [],
@@ -96,15 +128,15 @@ export default {
         this.feedbackMessage = 'User successfully updated';
         this.isSuccess = true;
         setTimeout(() => {
-        this.feedbackMessage = '';
-      }, 3000);
+          this.feedbackMessage = '';
+        }, 3000);
       }).catch(error => {
         console.error("Failed to update user", error);
         this.feedbackMessage = 'Failed to update user';
         this.isSuccess = false;
         setTimeout(() => {
-        this.feedbackMessage = '';
-      }, 3000);
+          this.feedbackMessage = '';
+        }, 3000);
       });
     },
     deleteAccount(user_id) {
@@ -124,9 +156,35 @@ export default {
 </script>
 
 <style scoped>
-.admin-dashboard {
-  margin: 30px;
+
+
+.analytics-container {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
+
+.user-table-container {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.dashboard-title {
+  margin-bottom: 20px;
+}
+
+.dashboard-subtitle {
+  margin-bottom: 10px;
+}
+
+.analytics-row {
+  display: flex;
+  flex-direction: column; 
+  gap: 20px;
+
+}
+
 
 .custom-modal.show {
   display: block;

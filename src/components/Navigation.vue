@@ -13,10 +13,6 @@
           </li>
         </ul>
         <ul class="navbar-nav ml-auto">
-      
-          <li v-if="authStore.user && authStore.user.role === 'admin'" class="nav-item">
-            <a class="nav-link" active-class="active" href="/admin-dashboard">Admin Dashboard</a>
-          </li>
           <li v-if="authStore.user && authStore.user.role === 'user'" class="nav-item">
             <a class="nav-link" active-class="active" href="/user-dashboard">User Dashboard</a>
           </li>
