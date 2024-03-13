@@ -11,6 +11,9 @@
           <label for="InputEmail" class="form-label">Change Email address</label>
           <input type="email" class="form-control" id="InputEmail" aria-describedby="emailHelp" v-model="user.email">
         </div>
+        <div v-if="feedbackMessage" :class="['feedback', { 'success': isSuccess, 'error': !isSuccess }]">
+          {{ feedbackMessage }}
+        </div>
         <div class="d-flex justify-content-between">
           <button type="button" class="btn btn-primary" @click="updateDetails">Update Details</button>
           <button type="button" class="btn btn-danger" @click="deleteAccount(user.user_id)">Delete Account</button>
@@ -35,6 +38,8 @@ export default {
         user_id: 0,
         email: "",
         name: "",
+        feedbackMessage: '',
+        isSuccess: false,
       }
     };
   },
@@ -42,22 +47,30 @@ export default {
     updateDetails() {
       this.$axios.put("/user/update/" + this.user.user_id, this.user)
         .then(response => {
+          alert("Account updated successfully.");
           this.$router.push('/user-dashboard');
         })
         .catch(error => {
+          this.feedbackMessage = "Failed to update account.";
+          this.isSuccess = false;
           console.error(error);
         });
     },
     deleteAccount(user_id) {
-      this.$axios.delete("/user/delete/" + user_id)
-        .then(response => {
-          const authStore = useAuthStore();
-          authStore.logout(); 
-          this.$router.push('/login');
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+        this.$axios.delete("/user/delete/" + user_id)
+          .then(response => {
+            alert("Account deleted successfully.");
+            const authStore = useAuthStore();
+            authStore.logout();
+            this.$router.push('/');
+          })
+          .catch((error) => {
+            this.feedbackMessage = "Failed to update account.";
+            this.isSuccess = false;
+            console.error(error);
+          });
+      }
     }
   },
   mounted() {

@@ -5,19 +5,22 @@
         <h1 class="mb-4">Register</h1>
         <div class="mb-3">
           <label for="InputName" class="form-label">Name</label>
-          <input type="text" class="form-control" id="InputName" v-model="name">
+          <input type="text" class="form-control" id="InputName" v-model="name" required>
         </div>
         <div class="mb-3">
           <label for="InputEmail" class="form-label">Email address</label>
-          <input type="email" class="form-control" id="InputEmail" v-model="email">
+          <input type="email" class="form-control" id="InputEmail" v-model="email" required>
         </div>
         <div class="mb-3">
           <label for="InputPassword" class="form-label">Password</label>
-          <input type="password" class="form-control" id="InputPassword" v-model="password">
+          <input type="password" class="form-control" id="InputPassword" v-model="password" required>
         </div>
         <div class="mb-3">
           <label for="InputConfirmPassword" class="form-label">Confirm Password</label>
-          <input type="password" class="form-control" id="InputConfirmPassword" v-model="confirmPassword">
+          <input type="password" class="form-control" id="InputConfirmPassword" v-model="confirmPassword" required>
+        </div>
+        <div v-if="feedbackMessage" :class="['feedback', { 'success': isSuccess, 'error': !isSuccess }]">
+          {{ feedbackMessage }}
         </div>
         <div class="d-flex justify-content-between">
           <button type="submit" class="btn btn-primary">Register</button>
@@ -34,32 +37,41 @@ export default {
   name: "Register",
   data() {
     return {
-      name: '', 
+      name: '',
       email: '',
-      password: '', 
+      password: '',
       confirmPassword: '',
-      role: 'user'
+      role: 'user',
+      feedbackMessage: '',
+      isSuccess: false,
     };
   },
   methods: {
     onSubmit() {
       if (this.password !== this.confirmPassword) {
-        alert("Passwords do not match!");
+        this.feedbackMessage = "Passwords do not match!";
+        this.isSuccess = false;
         return;
       }
       const userData = {
         name: this.name,
         email: this.email,
-        password_hash: this.password, 
-        role: this.role 
+        password_hash: this.password,
+        role: this.role
       };
       this.$axios.post('/register', userData)
         .then(response => {
-          console.log(response.data);
-          this.$router.push('/login');
+          if (response.data) {
+            this.feedbackMessage = "Registration successful. Redirecting to login...";
+            this.isSuccess = true;
+            this.$router.push('/login');
+          } else {
+            throw new Error('Registration failed.');
+          }
         })
         .catch(error => {
-          console.error("There was an error in the registration process:", error.response);
+          this.feedbackMessage = "Email already in use";
+          this.isSuccess = false;
         });
     }
   }
@@ -90,7 +102,7 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: 50%;
   max-width: 600px;
-  min-width: 300px; 
+  min-width: 300px;
   text-align: center;
   margin: 0 auto;
 }
@@ -102,15 +114,15 @@ export default {
 }
 
 .form-control {
-  width: calc(100% - 1.5rem); 
+  width: calc(100% - 1.5rem);
   padding: 0.375rem 0.75rem;
-  margin-bottom: 1rem; 
+  margin-bottom: 1rem;
 }
 
 .btn-primary,
 .btn-outline-primary {
-  width: 48%; 
-  margin-top: 1rem; 
+  width: 48%;
+  margin-top: 1rem;
 }
 
 .d-flex {

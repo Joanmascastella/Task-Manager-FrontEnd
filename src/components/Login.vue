@@ -5,17 +5,21 @@
         <h1 class="mb-4">Login</h1>
         <div class="mb-3">
           <label for="InputEmail" class="form-label">Email address</label>
-          <input type="email" class="form-control" id="InputEmail" aria-describedby="emailHelp" v-model="inputEmail">
+          <input type="email" class="form-control" id="InputEmail" aria-describedby="emailHelp" v-model="inputEmail" required>
         </div>
         <div class="mb-3">
           <label for="InputPassword" class="form-label">Password</label>
-          <input type="password" class="form-control" id="InputPassword" v-model="inputPassword">
+          <input type="password" class="form-control" id="InputPassword" v-model="inputPassword" required>
         </div>
         <div class="d-flex justify-content-between">
           <button type="submit" class="btn btn-primary">Login</button>
           <router-link to="/register" class="btn btn-outline-primary">Register</router-link>
         </div>
       </form>
+    </div>
+    <br>
+    <div v-if="feedback" :class="{'feedback': true, 'success': isSuccess, 'error': !isSuccess}">
+      {{ feedback }}
     </div>
   </div>
 </template>
@@ -28,14 +32,14 @@ export default {
   data() {
     return {
       inputEmail: '',
-      inputPassword: ''
+      inputPassword: '',
+      feedback: '', 
+      isSuccess: false, 
     };
   },
   setup() {
     const authStore = useAuthStore();
-    return {
-      authStore
-    };
+    return { authStore };
   },
   methods: {
     async onSubmit() {
@@ -46,21 +50,31 @@ export default {
 
       try {
         const response = await this.$axios.post('/login', loginData);
-        this.authStore.setUser({
-          authToken: response.data.authToken,
-          refreshToken: response.data.refreshToken,
-          id: response.data.id, 
-          username: this.inputEmail,
-          role: response.data.role, 
-        });
-        this.$router.push('/');
+        if (response && response.data && response.data.authToken) {
+          this.authStore.setUser({
+            authToken: response.data.authToken,
+            refreshToken: response.data.refreshToken,
+            id: response.data.id, 
+            username: this.inputEmail,
+            role: response.data.role, 
+          });
+          this.feedback = "Login successful!";
+          this.isSuccess = true;
+          setTimeout(() => {
+            this.$router.push('/');
+          });
+        } else {
+          throw new Error('Login failed');
+        }
       } catch (error) {
-        console.error("Login error:", error.response.data);
+        this.feedback = error.response && error.response.data && error.response.data.errorMessage ? error.response.data.errorMessage : "Login failed. Please check your credentials.";
+        this.isSuccess = false;
       }
     }
   }
 };
 </script>
+
 
 <style scoped>
 .parent {
