@@ -1,36 +1,57 @@
 <template>
-  <div class="user-dashboard">
-    <div v-if="user.user_id">
-      <div class="user-container">
-        <h1 class="mb-4">User Dashboard</h1>
-        <div class="mb-3">
-          <label for="InputName" class="form-label">Change Name</label>
-          <input type="text" class="form-control" id="InputName" aria-describedby="nameHelp" v-model="user.name">
-        </div>
-        <div class="mb-3">
-          <label for="InputEmail" class="form-label">Change Email address</label>
-          <input type="email" class="form-control" id="InputEmail" aria-describedby="emailHelp" v-model="user.email">
-        </div>
-        <div v-if="feedbackMessage" :class="['feedback', { 'success': isSuccess, 'error': !isSuccess }]">
-          {{ feedbackMessage }}
-        </div>
-        <div class="d-flex justify-content-between">
-          <button type="button" class="btn btn-primary" @click="updateDetails">Update Details</button>
-          <button type="button" class="btn btn-danger" @click="deleteAccount(user.user_id)">Delete Account</button>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-4" style="margin-top: 20px;">
+        <div v-if="user.user_id" class="analytics-container">
+          <h2 class="dashboard-subtitle">Analytics</h2>
+          <div class="analytics-row">
+            <TotalTasks />
+            <CompletedTasks />
+          </div>
         </div>
       </div>
-    </div>
-    <div v-else>
-      <p>Loading user data...</p>
+      <div class="col-lg-8">
+        <div class="user-dashboard">
+          <div v-if="user.user_id">
+            <div class="user-container">
+              <h1 class="mb-4">Manage Account</h1>
+              <div class="mb-3">
+                <label for="InputName" class="form-label">Change Name</label>
+                <input type="text" class="form-control" id="InputName" aria-describedby="nameHelp" v-model="user.name">
+              </div>
+              <div class="mb-3">
+                <label for="InputEmail" class="form-label">Change Email address</label>
+                <input type="email" class="form-control" id="InputEmail" aria-describedby="emailHelp" v-model="user.email">
+              </div>
+              <div v-if="feedbackMessage" :class="['feedback', { 'success': isSuccess, 'error': !isSuccess }]">
+                {{ feedbackMessage }}
+              </div>
+              <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-primary" @click="updateDetails">Update Details</button>
+                <button type="button" class="btn btn-danger" @click="deleteAccount(user.user_id)">Delete Account</button>
+              </div>
+            </div>
+          </div>
+          <div v-else>
+            <p>Loading user data...</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { useAuthStore } from '@/store/auth.js';
+import CompletedTasks from '@/components/User-Analytics/CompletedTasks.vue'; 
+import TotalTasks from '@/components/User-Analytics/TotalTasks.vue'; 
 
 export default {
   name: "UserDashboard",
+  components: {
+    CompletedTasks,
+    TotalTasks,
+  },
 
   data() {
     return {
@@ -90,14 +111,9 @@ export default {
 };
 </script>
 
-
-<style>
+<style scoped>
 .user-dashboard {
-  max-width: 100%;
-  margin: auto;
   padding: 20px;
-  background-color: #F3F2F4;
-  height: 100vh;
   color: #333;
   font-family: 'Helvetica', 'Arial', sans-serif;
 }
@@ -107,9 +123,6 @@ export default {
   padding: 40px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 50%;
-  max-width: 500px;
-  margin: auto;
 }
 
 h1 {
@@ -158,10 +171,20 @@ h1 {
   gap: 1rem;
 }
 
-@media (max-width: 768px) {
-  .user-container {
-    width: 90%;
-    padding: 20px;
-  }
+.analytics-container {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-subtitle {
+  color: #4A4A4A;
+  margin-bottom: 1.5rem;
+}
+
+.analytics-row {
+  display: flex;
+  flex-direction: column;
 }
 </style>
