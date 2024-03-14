@@ -16,7 +16,14 @@
           <h1>asdasd</h1>
         </div>
         <div class="col-md-5">
-          <TaskItem />
+
+          <TaskItem @refresh-analytics="refreshAnalytics" />
+
+          <div class="analytics">
+            <h2 class="dashboard-subtitle">Total Progress</h2>
+            <TotalTasks ref="totalTasks" />
+            <CompletedTasks ref="completedTasks" />
+          </div>
         </div>
       </div>
     </div>
@@ -27,18 +34,38 @@
 import { useAuthStore } from '@/store/auth.js';
 import AdminDashboard from '@/components/dashboard/AdminDashboard.vue';
 import TaskItem from '@/components/Task/TaskItem.vue';
+import CompletedTasks from '@/components/User-Analytics/CompletedTasks.vue';
+import TotalTasks from '@/components/User-Analytics/TotalTasks.vue';
 
 export default {
   name: "Home",
   components: {
     AdminDashboard,
     TaskItem,
+    CompletedTasks,
+    TotalTasks,
   },
   setup() {
     const authStore = useAuthStore();
 
     return { authStore };
   },
+  methods: {
+    refreshAnalytics() {
+      this.$refs.completedTasks.fetchCompletedTasks(this.authStore.user.id);
+      this.$refs.totalTasks.fetchTotalTasks(this.authStore.user.id);
+    },
+    mounted() {
+    const authStore = useAuthStore();
+    const userId = authStore.userId;
+    if (userId) {
+      this.fetchCompletedTasks(userId);
+    }
+  }
+  },
+
+
+
 };
 </script>
 
@@ -108,5 +135,14 @@ p {
 .welcome-message {
   margin-bottom: 20px;
   color: #000000;
+}
+
+.analytics {
+  border: 1px solid #000;
+  border-radius: 10px;
+  padding: 30px;
+  margin: 20px auto;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 </style>

@@ -1,19 +1,8 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-lg-4" style="margin-top: 20px;">
-        <div v-if="user.user_id" class="analytics-container">
-          <h2 class="dashboard-subtitle">Analytics</h2>
-          <div class="analytics-row">
-            <TotalTasks />
-            <CompletedTasks />
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-8">
-        <div class="user-dashboard">
-          <div v-if="user.user_id">
-            <div class="user-container">
+ <div class="container-fluid vh-100 d-flex justify-content-center align-items-center">       
+    <div class="user-dashboard w-100" style="max-width: 600px;"> 
+        <div v-if="user.user_id">
+          <div class="user-container">
               <h1 class="mb-4">Manage Account</h1>
               <div class="mb-3">
                 <label for="InputName" class="form-label">Change Name</label>
@@ -37,20 +26,17 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
+
 </template>
 
 <script>
 import { useAuthStore } from '@/store/auth.js';
-import CompletedTasks from '@/components/User-Analytics/CompletedTasks.vue'; 
-import TotalTasks from '@/components/User-Analytics/TotalTasks.vue'; 
+
 
 export default {
   name: "UserDashboard",
   components: {
-    CompletedTasks,
-    TotalTasks,
+
   },
 
   data() {
@@ -112,11 +98,7 @@ export default {
 </script>
 
 <style scoped>
-.user-dashboard {
-  padding: 20px;
-  color: #333;
-  font-family: 'Helvetica', 'Arial', sans-serif;
-}
+
 
 .user-container {
   background-color: #ffffff;

@@ -62,6 +62,7 @@ export default {
             this.createFormVisible = true;
         },
         handleTaskCreated(newTaskId) {
+
             this.getAll();
             if (!newTaskId) {
                 this.feedbackMessage = "Failed to create new task.";
@@ -69,6 +70,7 @@ export default {
             }
             else {
                 this.createFormVisible = false;
+                this.$emit('refresh-analytics');
             }
         },
         refreshTask() {
@@ -85,10 +87,11 @@ export default {
         if (userId) {
             this.$axios.get("/user/" + userId)
                 .then((res) => {
-                    this.task.user_id = res.data;
+                    this.task.user_id = res.data.user_id;
                     this.getAll();
                 })
                 .catch((error) => console.log(error));
+
         } else {
             console.log('No user ID found in auth store.');
         }
