@@ -11,7 +11,14 @@
     </div>
 
     <div v-else-if="authStore.user && authStore.user.role === 'user'" class="A-Container">
-      <h1 class="welcome-message">Welcome, {{ authStore.user.username }}.</h1>
+      <div class="row">
+        <div class="col-md-7">
+          <h1>asdasd</h1>
+        </div>
+        <div class="col-md-5">
+          <TaskItem />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -19,11 +26,13 @@
 <script>
 import { useAuthStore } from '@/store/auth.js';
 import AdminDashboard from '@/components/dashboard/AdminDashboard.vue';
+import TaskItem from '@/components/Task/TaskItem.vue';
 
 export default {
   name: "Home",
   components: {
     AdminDashboard,
+    TaskItem,
   },
   setup() {
     const authStore = useAuthStore();
@@ -100,5 +109,4 @@ p {
   margin-bottom: 20px;
   color: #000000;
 }
-
 </style>

@@ -66,7 +66,8 @@ export default {
             this.isSuccess = true;
             this.$router.push('/login');
           } else {
-            throw new Error('Registration failed.');
+            this.feedbackMessage = "Registration Failed.";
+            this.isSuccess = false;
           }
         })
         .catch(error => {
