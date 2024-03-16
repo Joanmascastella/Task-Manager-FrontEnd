@@ -15,7 +15,7 @@
             </div>
             <div class="task-actions col-12 col-sm-4 mt-2 mt-sm-0">
                 <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
-                    <button class="btn btn-primary" @click="editTask(task.task_id)">Edit</button>
+                    <button class="btn btn-primary" @click="editTask(task)">Edit</button>
                     <button class="btn btn-success" @click="shareTask(task)">Share</button>
                     <button class="btn btn-danger" @click="deleteTask(task.task_id)">Delete</button>
                 </div>
@@ -39,6 +39,9 @@ export default {
         emitNewTaskEvent() {
             this.$emit('new-task-clicked');
         },
+        editTask(task) {
+            this.$emit('edit-task', task);
+        },
         toggleTaskStatus(task) {
             const taskId = task.task_id;
             const status = task.status === 'completed' ? 'pending' : 'completed';
@@ -56,9 +59,6 @@ export default {
                     console.error(error);
                 });
         },
-        editTask(task) {
-            // Here you can handle the logic to edit a task
-        },
         shareTask(task) {
             const taskId = task.task_id;
             const currentURL = window.location.origin + '/share/task/' + taskId;
@@ -66,7 +66,7 @@ export default {
             navigator.clipboard.writeText(currentURL)
                 .then(() => {
                     console.log('URL copied to clipboard:', currentURL);
-                    alert("Url has been copied to clipboard");
+                    alert("Link has been copied to clipboard.");
                 })
                 .catch((error) => {
                     console.error('Failed to copy URL to clipboard:', error);

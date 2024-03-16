@@ -2,6 +2,13 @@
     <div class="create-task-container">
         <form @submit.prevent="createNewTask" class="create-task-form">
             <h1>Create New Task</h1>
+
+            <div class="form-group" v-if="availableList.length > 0">
+                <label for="selectTaskList">List:</label>
+                <select id="selectTaskList" v-model="task.list_id">
+                    <option v-for="list in availableList" :key="list.id" :value="list.id">{{ list.name }}</option>
+                </select>
+            </div>
             <div class="form-group">
                 <label for="inputTaskTitle">Title:</label>
                 <input type="text" id="inputTaskTitle" v-model="task.title" required>
@@ -17,11 +24,16 @@
             <div v-if="feedbackMessage" :class="['feedback', { 'success': isSuccess, 'error': !isSuccess }]">
                 {{ feedbackMessage }}
             </div>
+            <div v-if="availableList.length === 0" class="form-group">
+                <p>There are no available lists. Create one:</p>
+                <button class="btn btn-primary btn-sm" @click.prevent="createList">Create List</button>
+            </div>
             <button class="btn btn-success" type="submit" style="margin: 8px;">Create Task</button>
-            <button class="btn btn-danger" @click="cancelCreateTask">Cancel</button> 
+            <button class="btn btn-danger" @click="cancelCreateTask">Cancel</button>
         </form>
     </div>
 </template>
+
 
 <script>
 export default {
@@ -39,6 +51,7 @@ export default {
                 description: "",
                 deadline: "",
             },
+            availableList: [],
             minDate: new Date().toISOString().split('T')[0],
             feedbackMessage: '',
             isSuccess: false,
@@ -56,13 +69,24 @@ export default {
                 .then(response => {
                     this.feedbackMessage = "Task successfully created.";
                     this.isSuccess = true;
-                    this.$emit('task-created', response.data.id); 
+                    this.$emit('task-created', response.data.id);
                     this.resetForm();
                 })
                 .catch(error => {
                     this.feedbackMessage = "Something went wrong when creating the new task.";
                     this.isSuccess = false;
                 });
+        },
+        getAvaliableLists() {
+            this.$axios.get('/lists')
+                .then(response => {
+                    this.availableList = response.data;
+                })
+                .catch(error => {
+                    this.feedbackMessage = "Something went wrong when getting lists."
+                    this.isSuccess = false;
+                })
+
         },
         resetForm() {
             this.task.title = "";
@@ -72,8 +96,11 @@ export default {
             this.isSuccess = false;
         },
         cancelCreateTask() {
-            this.$emit('cancel-create-task'); 
+            this.$emit('cancel-create-task');
         }
+    },
+    mounted() {
+        this.getAvaliableLists();
     }
 };
 </script>
@@ -103,6 +130,11 @@ export default {
     margin-bottom: 8px;
     font-weight: 500;
     color: #555;
+}
+
+.btn-sm {
+    padding: 8px 15px;
+    font-size: 0.875rem;
 }
 
 input[type="text"],

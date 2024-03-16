@@ -7,7 +7,10 @@
             <CreateTask v-if="createFormVisible" :userId="task.user_id" @task-created="handleTaskCreated"
                 @cancel-create-task="cancelCreateTask" />
         </div>
-        <TaskList v-if="taskCount > 0" :tasks="tasks" @new-task-clicked="showCreateTaskForm" />
+        <EditTaskPanel v-if="editFormVisible" :taskData="taskToEdit" @task-updated-successfully="handleTaskUpdated"
+            @cancel-edit-task="cancelEditTask" />
+        <TaskList v-if="taskCount > 0" :tasks="tasks" @new-task-clicked="showCreateTaskForm"
+            @edit-task="showEditTaskForm" />
     </div>
 </template>
 
@@ -16,12 +19,14 @@
 import { useAuthStore } from '@/store/auth.js';
 import CreateTask from './CreateTask.vue';
 import TaskList from './TaskList.vue';
+import EditTaskPanel from './EditTaskPanel.vue';
 
 export default {
     name: "TaskItem",
     components: {
         CreateTask,
-        TaskList
+        TaskList,
+        EditTaskPanel
     },
     data() {
         return {
@@ -38,7 +43,9 @@ export default {
                 isSuccess: false,
             },
             createFormVisible: false,
-            tasks: []
+            tasks: [],
+            editFormVisible: false,
+            taskToEdit: null,
         };
     },
     computed: {
@@ -47,6 +54,17 @@ export default {
         }
     },
     methods: {
+        showEditTaskForm(task) {
+            this.taskToEdit = task;
+            this.editFormVisible = true;
+        },
+        handleTaskUpdated() {
+            this.getAll(); 
+            this.editFormVisible = false; 
+        },
+        cancelEditTask() {
+            this.editFormVisible = false;
+        },
         getAll() {
             this.$axios.get("/tasks")
                 .then(response => {
