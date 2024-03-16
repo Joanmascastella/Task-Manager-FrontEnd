@@ -13,7 +13,6 @@
     <div v-else-if="authStore.user && authStore.user.role === 'user'" class="A-Container">
       <div class="row">
         <div class="col-md-7">
-          <h1>asdasd</h1>
         </div>
         <div class="col-md-5">
 

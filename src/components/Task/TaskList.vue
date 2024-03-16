@@ -1,5 +1,5 @@
 <template>
-    <div class="task-container overflow-auto p-3 bg-light shadow rounded">
+    <div class="task-container overflow-auto p-3 bg-light shadow rounded" style="max-height: 300px;">
         <div class="header d-flex justify-content-end">
             <button class="btn btn-primary mb-3" @click="emitNewTaskEvent">New Task</button>
         </div>
@@ -7,20 +7,23 @@
             {{ feedbackMessage }}
         </div>
         <div v-for="(task, index) in tasks" :key="task.task_id"
-            :class="['task-item', 'd-flex', 'align-items-center', 'mb-3', 'p-2', { 'bg-white': index % 2 === 0, 'bg-secondary bg-opacity-10': index % 2 !== 0 }]">
-            <div class="task-details flex-grow-1 d-flex align-items-center">
+            :class="['task-item', 'row', { 'bg-white': index % 2 === 0, 'bg-secondary bg-opacity-10': index % 2 !== 0 }]">
+            <div class="task-details col-12 col-sm-8 d-flex align-items-center">
                 <input type="checkbox" :checked="task.status === 'completed'" class="form-check-input me-2"
                     @change="toggleTaskStatus(task)" />
                 <span class="flex-grow-1">{{ task.title }}</span>
             </div>
-            <div class="task-actions">
-                <button class="btn btn-primary" @click="editTask(task.task_id)">Edit</button>
-                <button class="btn btn-success" @click="shareTask(task.task_id)">Share</button>
-                <button class="btn btn-danger" @click="deleteTask(task.task_id)">Delete</button>
+            <div class="task-actions col-12 col-sm-4 mt-2 mt-sm-0">
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
+                    <button class="btn btn-primary" @click="editTask(task.task_id)">Edit</button>
+                    <button class="btn btn-success" @click="shareTask(task)">Share</button>
+                    <button class="btn btn-danger" @click="deleteTask(task.task_id)">Delete</button>
+                </div>
             </div>
         </div>
     </div>
 </template>
+
 
 
 <script>
@@ -49,7 +52,7 @@ export default {
                         this.feedbackMessage = "Failed to change status.";
                         this.isSuccess = false;
                     }, 2000);
-                
+
                     console.error(error);
                 });
         },
@@ -57,7 +60,17 @@ export default {
             // Here you can handle the logic to edit a task
         },
         shareTask(task) {
-            // Here you can handle the logic to share a task
+            const taskId = task.task_id;
+            const currentURL = window.location.origin + '/share/task/' + taskId;
+
+            navigator.clipboard.writeText(currentURL)
+                .then(() => {
+                    console.log('URL copied to clipboard:', currentURL);
+                    alert("Url has been copied to clipboard");
+                })
+                .catch((error) => {
+                    console.error('Failed to copy URL to clipboard:', error);
+                });
         },
         deleteTask(taskid) {
             this.$axios.delete(`/tasks/${taskid}`)
