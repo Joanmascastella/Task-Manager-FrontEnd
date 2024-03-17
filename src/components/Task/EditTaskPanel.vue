@@ -20,7 +20,8 @@
             <div class="form-group" v-if="availableList.length > 0">
                 <label for="selectTaskList">List:</label>
                 <select id="selectTaskList" v-model="task.list_id">
-                    <option v-for="list in availableList" :key="list.id" :value="list.id">{{ list.name }}</option>
+                    <option v-for="list in availableList" :key="list.list_id" :value="list.list_id">{{ list.listname }}
+                    </option>
                 </select>
             </div>
             <div v-if="availableList.length === 0" class="form-group">
@@ -62,6 +63,7 @@ export default {
                 description: this.task.description,
                 deadline: this.task.deadline,
                 status: this.task.status,
+                list_id: this.task.list_id,
 
             };
 
@@ -176,5 +178,19 @@ input[type="date"]:focus {
 
 .form-group label {
     padding-left: 8px;
+}
+.form-group-with-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+
+select {
+    width: calc(100% - 150px); 
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 </style>

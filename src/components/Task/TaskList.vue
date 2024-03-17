@@ -1,7 +1,8 @@
 <template>
     <div class="task-container overflow-auto p-3 bg-light shadow rounded" style="max-height: 300px;">
         <div class="header d-flex justify-content-end">
-            <button class="btn btn-primary mb-3" @click="emitNewTaskEvent">New Task</button>
+            <button class="btn btn-primary mb-3" style="margin-right: 5px;" @click="emitNewTaskEvent">New Task</button>
+            <button class="btn btn-primary mb-3" @click.prevent="createList">Create New List</button>
         </div>
         <div v-if="feedbackMessage" :class="['feedback', { 'success': isSuccess, 'error': !isSuccess }]">
             {{ feedbackMessage }}
@@ -21,12 +22,13 @@
                 </div>
             </div>
         </div>
+        <create-list-popup v-if="showCreateListPopup" :is-visible="showCreateListPopup" @close="cancelCreateList">
+        </create-list-popup>
     </div>
 </template>
 
-
-
 <script>
+import CreateListPopup from '@/components/List/CreateListPopup.vue';
 export default {
     name: "TaskList",
     props: {
@@ -34,6 +36,15 @@ export default {
             type: Array,
             required: true
         }
+        
+    },
+    data() {
+        return {
+            showCreateListPopup: false
+        };
+    },
+    components: {
+        CreateListPopup
     },
     methods: {
         emitNewTaskEvent() {
@@ -90,6 +101,15 @@ export default {
 
                 });
         },
+        createList() {
+            this.showCreateListPopup = true;
+        },
+        cancelCreateList() {
+            this.showCreateListPopup = false;
+        },
+        cancelCreateTask() {
+            this.$emit('cancel-create-task');
+        }
     }
 };
 </script>

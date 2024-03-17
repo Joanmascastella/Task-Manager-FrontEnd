@@ -6,7 +6,8 @@
             <div class="form-group" v-if="availableList.length > 0">
                 <label for="selectTaskList">List:</label>
                 <select id="selectTaskList" v-model="task.list_id">
-                    <option v-for="list in availableList" :key="list.id" :value="list.id">{{ list.name }}</option>
+                    <option v-for="list in availableList" :key="list.list_id" :value="list.list_id">{{ list.listname }}
+                    </option>
                 </select>
             </div>
             <div class="form-group">
@@ -31,11 +32,15 @@
             <button class="btn btn-success" type="submit" style="margin: 8px;">Create Task</button>
             <button class="btn btn-danger" @click="cancelCreateTask">Cancel</button>
         </form>
+        <create-list-popup v-if="showCreateListPopup" :is-visible="showCreateListPopup" @close="cancelCreateList">
+        </create-list-popup>
+
+
     </div>
 </template>
-
-
 <script>
+import CreateListPopup from '@/components/List/CreateListPopup.vue';
+
 export default {
     name: "CreateTask",
     props: {
@@ -44,17 +49,22 @@ export default {
             required: true
         }
     },
+    components: {
+        CreateListPopup
+    },
     data() {
         return {
             task: {
                 title: "",
                 description: "",
                 deadline: "",
+                list_id: 0,
             },
             availableList: [],
             minDate: new Date().toISOString().split('T')[0],
             feedbackMessage: '',
             isSuccess: false,
+            showCreateListPopup: false
         };
     },
     methods: {
@@ -63,7 +73,8 @@ export default {
                 user_id: this.userId,
                 title: this.task.title,
                 description: this.task.description,
-                deadline: this.task.deadline
+                deadline: this.task.deadline,
+                list_id: this.task.list_id,
             };
             this.$axios.post('/tasks', taskData)
                 .then(response => {
@@ -77,6 +88,13 @@ export default {
                     this.isSuccess = false;
                 });
         },
+        createList() {
+            this.showCreateListPopup = true;
+        },
+        cancelCreateList() {
+            this.getAvaliableLists();
+            this.showCreateListPopup = false;
+        },
         getAvaliableLists() {
             this.$axios.get('/lists')
                 .then(response => {
@@ -85,8 +103,7 @@ export default {
                 .catch(error => {
                     this.feedbackMessage = "Something went wrong when getting lists."
                     this.isSuccess = false;
-                })
-
+                });
         },
         resetForm() {
             this.task.title = "";
@@ -177,5 +194,32 @@ input[type="date"]:focus {
 
 .form-group label {
     padding-left: 8px;
+}
+.form-group-with-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+select {
+    width: calc(100% - 150px); 
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.btn-sm {
+    margin-left: 10px; 
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
 }
 </style>
