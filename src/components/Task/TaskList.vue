@@ -87,10 +87,6 @@ export default {
             this.$axios.delete(`/tasks/${taskid}`)
                 .then(response => {
                     this.$parent.refreshTask();
-                    setTimeout(() => {
-                        this.feedbackMessage = "Task deleted.";
-                        this.isSuccess = true;
-                    }, 2000);
                 })
                 .catch((error) => {
                     setTimeout(() => {

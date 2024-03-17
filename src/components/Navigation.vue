@@ -13,6 +13,10 @@
           </li>
         </ul>
         <ul class="navbar-nav">
+          <li v-if="authStore.user && authStore.user.role === 'user'" class="nav-item" style="color: white;">
+            <router-link to="/list-dashboard" class="nav-link" active-class="active">List Dashboard</router-link>
+         
+          </li>
           <li v-if="authStore.user && authStore.user.role === 'user'" class="nav-item">
             <router-link to="/user-dashboard" class="nav-link" active-class="active">User Dashboard</router-link>
           </li>
@@ -47,11 +51,20 @@ export default {
 
 <style scoped>
 
-.navbar
- {
-  background-color: #000000;
-  margin-bottom: 0 !important; 
+.navbar {
+  background-color: #343a40;
+  padding: 0.5rem 1rem;
+  border-bottom: 3px solid #ff385c;
 }
+.navbar-brand {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.navbar-brand:hover {
+  color: #ddd;
+}
+
 </style>
 
 
