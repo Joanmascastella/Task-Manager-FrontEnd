@@ -7,6 +7,8 @@ import Register from '../components/register.vue';
 import UserDashboard from '../components/Dashboard/userdashboard.vue';
 import ShareTask from '../components/Share/ShareTask.vue';
 import ListDashboard from '../components/List/ListDashboard.vue';
+import ShareList from '../components/Share/ShareList.vue';
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,6 +18,7 @@ const router = createRouter({
     { path: '/register', component: Register },
     { path: '/user-dashboard', component: UserDashboard },
     { path: '/share/task/:taskId', component: ShareTask }, 
+    { path: '/share/list/:listId', component: ShareList }, 
     { path: '/list-dashboard' , component: ListDashboard}, 
   ]
 });
