@@ -1,7 +1,6 @@
 <template>
     <div class="container mt-4">
         <div class="row">
-            <!-- Column for the List Dashboard -->
             <div class="col-md-6 bg-white border rounded shadow-sm">
                 <div class="header d-flex justify-content-end" style="margin: 10px;">
                     <button class="btn btn-primary mb-3" @click.prevent="createList">Create New List</button>
@@ -31,12 +30,15 @@
             </div>
 
         </div>
+        <edit-list-popup v-if="showEditListPopup" :list="selectedListForEdit" :is-visible="showEditListPopup"
+            @close="toggleEditListPopup(false)" @list-updated="listUpdated"></edit-list-popup>
         <create-list-popup v-if="showCreateListPopup" :is-visible="showCreateListPopup" @close="cancelCreateList">
         </create-list-popup>
     </div>
 </template>
 
 <script>
+import EditListPopup from '@/components/List/EditListPopup.vue';
 import CreateListPopup from '@/components/List/CreateListPopup.vue';
 import ViewList from '@/components/List/ViewList.vue';
 
@@ -44,14 +46,17 @@ export default {
     name: 'ListDashboard',
     components: {
         CreateListPopup,
-        ViewList
+        ViewList,
+        EditListPopup
     },
     data() {
         return {
             listsItems: [],
             showCreateListPopup: false,
             selectedList: null,
-            showViewList: false
+            showViewList: false,
+            selectedListForEdit: null,
+            showEditListPopup: false,
         }
     },
     methods: {
@@ -99,7 +104,19 @@ export default {
         cancelCreateList() {
             this.getAllLists();
             this.showCreateListPopup = false;
+        },
+        edit(list) {
+            this.selectedListForEdit = list;
+            this.toggleEditListPopup(true);
+        },
+        toggleEditListPopup(show) {
+            this.showEditListPopup = show;
+        },
+        listUpdated() {
+            this.getAllLists();
+            this.toggleEditListPopup(false);
         }
+
     },
     mounted() {
         this.getAllLists();
