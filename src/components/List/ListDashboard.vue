@@ -1,7 +1,11 @@
 <template>
     <div class="container mt-4">
         <div class="row">
+            <!-- Column for the List Dashboard -->
             <div class="col-md-6 bg-white border rounded shadow-sm">
+                <div class="header d-flex justify-content-end" style="margin: 10px;">
+                    <button class="btn btn-primary mb-3" @click.prevent="createList">Create New List</button>
+                </div>
                 <h1 class="text-center mt-3">Your Lists</h1>
                 <div v-if="listsItems.length > 0" class="list-container px-3 pb-3">
                     <div v-for="list in listsItems" :key="list.list_id"
@@ -11,7 +15,8 @@
                             <div class="button-group">
                                 <button @click="edit(list)" class="btn btn-info btn-sm mx-1">Edit</button>
                                 <button @click="share(list)" class="btn btn-primary btn-sm mx-1">Share</button>
-                                <button @click="deleteList(list.list_id)" class="btn btn-danger btn-sm mx-1">Delete</button>
+                                <button @click="deleteList(list.list_id)"
+                                    class="btn btn-danger btn-sm mx-1">Delete</button>
                                 <button @click="view(list)" class="btn btn-secondary btn-sm mx-1">View</button>
                             </div>
                         </div>
@@ -21,35 +26,54 @@
                     <p>No lists found. Create one!</p>
                 </div>
             </div>
+            <div class="col-md-6" v-if="showViewList">
+                <ViewList :list="selectedList" />
+            </div>
+
         </div>
+        <create-list-popup v-if="showCreateListPopup" :is-visible="showCreateListPopup" @close="cancelCreateList">
+        </create-list-popup>
     </div>
 </template>
 
 <script>
+import CreateListPopup from '@/components/List/CreateListPopup.vue';
+import ViewList from '@/components/List/ViewList.vue';
+
 export default {
     name: 'ListDashboard',
+    components: {
+        CreateListPopup,
+        ViewList
+    },
     data() {
         return {
-            listsItems: []
+            listsItems: [],
+            showCreateListPopup: false,
+            selectedList: null,
+            showViewList: false
         }
     },
     methods: {
+        view(list) {
+            this.selectedList = list;
+            this.showViewList = true;
+        },
         getAllLists() {
             this.$axios.get('/lists')
                 .then(response => {
                     this.listsItems = response.data;
                 })
                 .catch(error => {
-                    this.feedbackMessage = "Something went wrong when getting lists.";
-                    this.isSuccess = false;
+                    console.error("Something went wrong when getting lists:", error);
                 });
         },
         deleteList(listId) {
             if (confirm("Are you sure you want to delete this list?")) {
                 this.$axios.delete(`/lists/${listId}`)
                     .then(response => {
-                        this.getAllLists(); // Refresh the lists after deletion
-                        alert(response.data.message); // Show success message
+                        this.getAllLists();
+                        alert(response.data.message);
                     })
                     .catch(error => {
                         console.error('Failed to delete list:', error);
@@ -68,6 +92,13 @@ export default {
                 .catch((error) => {
                     console.error('Failed to copy URL to clipboard:', error);
                 });
+        },
+        createList() {
+            this.showCreateListPopup = true;
+        },
+        cancelCreateList() {
+            this.getAllLists();
+            this.showCreateListPopup = false;
         }
     },
     mounted() {
@@ -75,6 +106,7 @@ export default {
     }
 }
 </script>
+
 
 <style scoped>
 .list-container {
