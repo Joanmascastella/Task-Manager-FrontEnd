@@ -194,7 +194,8 @@ export default {
     background: #f7f7f7;
     border-radius: 10px;
     padding: 30px;
-    margin: 25px auto;
+    margin-top: 20px;
+    height: 620px;
     width: 100%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
 }
