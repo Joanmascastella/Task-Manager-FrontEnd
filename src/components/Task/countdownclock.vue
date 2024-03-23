@@ -1,5 +1,5 @@
 <template>
-    <div class="task-container p-3 bg-light shadow rounded">
+    <div class="task-container overflow-auto p-3 bg-light shadow rounded">
         <div class="pomodoro">
             <div class="row p-4 bg-light shadow rounded">
                 <div class="col-md-6">
