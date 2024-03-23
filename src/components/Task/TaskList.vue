@@ -4,9 +4,6 @@
             <button class="btn btn-primary mb-3" style="margin-right: 5px;" @click="emitNewTaskEvent">New Task</button>
             <button class="btn btn-primary mb-3" @click.prevent="createList">Create New List</button>
         </div>
-        <div v-if="feedbackMessage" :class="['feedback', { 'success': isSuccess, 'error': !isSuccess }]">
-            {{ feedbackMessage }}
-        </div>
         <div v-for="(task, index) in tasks" :key="task.task_id"
             :class="['task-item', 'row', { 'bg-white': index % 2 === 0, 'bg-secondary bg-opacity-10': index % 2 !== 0 }]">
             <div class="task-details col-12 col-sm-8 d-flex align-items-center">
@@ -62,11 +59,6 @@ export default {
                     this.$parent.refreshTask();
                 })
                 .catch((error) => {
-                    setTimeout(() => {
-                        this.feedbackMessage = "Failed to change status.";
-                        this.isSuccess = false;
-                    }, 2000);
-
                     console.error(error);
                 });
         },

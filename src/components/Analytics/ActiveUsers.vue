@@ -14,7 +14,6 @@ export default {
   },
   methods: {
     fetchActiveUsers() {
-      // Assuming you're using Axios for HTTP requests
       this.$axios.get("/analytics/users").then(response => {
         this.activeUsers = response.data;
       }).catch(error => {

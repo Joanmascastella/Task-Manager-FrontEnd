@@ -71,8 +71,6 @@ export default {
                     this.tasks = response.data;
                 })
                 .catch((error) => {
-                    this.feedbackMessage = "Failed to retrieve tasks for user.";
-                    this.isSuccess = false;
                     console.error(error);
                 });
         },

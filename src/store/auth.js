@@ -17,7 +17,6 @@ export const useAuthStore = defineStore('auth', {
     refreshToken: null
   }),
   actions: {
-    // In auth.js store action
     setUser(userData) {
       this.user = {
         id: userData.id,

@@ -14,7 +14,6 @@ export default {
   },
   methods: {
     fetchTotalTasks() {
-      // Assuming you're using Axios for HTTP requests
       this.$axios.get("/analytics/tasks").then(response => {
         this.totalTasks = response.data;
       }).catch(error => {

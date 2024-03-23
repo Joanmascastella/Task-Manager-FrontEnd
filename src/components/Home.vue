@@ -13,11 +13,10 @@
     <div v-else-if="authStore.user && authStore.user.role === 'user'" class="A-Container">
       <div class="row">
         <div class="col-md-7">
+          <CountDownClock/>
         </div>
         <div class="col-md-5">
-
           <TaskItem @refresh-analytics="refreshAnalytics" />
-
           <div class="analytics">
             <h2 class="dashboard-subtitle">Total Progress</h2>
             <TotalTasks ref="totalTasks" />
@@ -33,6 +32,7 @@
 import { useAuthStore } from '@/store/auth.js';
 import AdminDashboard from '@/components/dashboard/AdminDashboard.vue';
 import TaskItem from '@/components/Task/TaskItem.vue';
+import CountDownClock from '@/components/Task/Countdownclock.vue';
 import CompletedTasks from '@/components/User-Analytics/CompletedTasks.vue';
 import TotalTasks from '@/components/User-Analytics/TotalTasks.vue';
 
@@ -43,6 +43,7 @@ export default {
     TaskItem,
     CompletedTasks,
     TotalTasks,
+    CountDownClock
   },
   setup() {
     const authStore = useAuthStore();
@@ -55,12 +56,12 @@ export default {
       this.$refs.totalTasks.fetchTotalTasks(this.authStore.user.id);
     },
     mounted() {
-    const authStore = useAuthStore();
-    const userId = authStore.userId;
-    if (userId) {
-      this.fetchCompletedTasks(userId);
+      const authStore = useAuthStore();
+      const userId = authStore.userId;
+      if (userId) {
+        this.fetchCompletedTasks(userId);
+      }
     }
-  }
   },
 
 
