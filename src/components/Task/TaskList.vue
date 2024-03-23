@@ -14,17 +14,21 @@
             <div class="task-actions col-12 col-sm-4 mt-2 mt-sm-0">
                 <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
                     <button class="btn btn-primary" @click="editTask(task)">Edit</button>
+                    <button class="btn btn-primary" @click.prevent="viewDetails(task)">View</button>
                     <button class="btn btn-danger" @click="deleteTask(task.task_id)">Delete</button>
                 </div>
             </div>
         </div>
         <create-list-popup v-if="showCreateListPopup" :is-visible="showCreateListPopup" @close="cancelCreateList">
         </create-list-popup>
+        <TaskDetails v-if="showTaskPopup" :is-visible="showTaskPopup" :task="selectedTask" @close="cancelTaskList" />
+
     </div>
 </template>
 
 <script>
 import CreateListPopup from '@/components/List/CreateListPopup.vue';
+import TaskDetails from '@/components/Task/TaskDetails.vue';
 export default {
     name: "TaskList",
     props: {
@@ -32,15 +36,18 @@ export default {
             type: Array,
             required: true
         }
-        
+
     },
     data() {
         return {
-            showCreateListPopup: false
+            showCreateListPopup: false,
+            showTaskPopup: false,
+            selectedTask: Object,
         };
     },
     components: {
-        CreateListPopup
+        CreateListPopup,
+        TaskDetails,
     },
     methods: {
         emitNewTaskEvent() {
@@ -71,12 +78,20 @@ export default {
                         this.feedbackMessage = "Failed to delete task";
                         this.isSuccess = false;
                     }, 2000);
-                
+
 
                 });
         },
         createList() {
             this.showCreateListPopup = true;
+        },
+        viewDetails(task) {
+            this.selectedTask = task;
+            this.showTaskPopup = true;
+        },
+
+        cancelTaskList() {
+            this.showTaskPopup = false;
         },
         cancelCreateList() {
             this.showCreateListPopup = false;
