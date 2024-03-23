@@ -13,7 +13,6 @@
                             <span class="list-name">{{ list.listname }}</span>
                             <div class="button-group">
                                 <button @click="edit(list)" class="btn btn-info btn-sm mx-1">Edit</button>
-                                <button @click="share(list)" class="btn btn-primary btn-sm mx-1">Share</button>
                                 <button @click="deleteList(list.list_id)"
                                     class="btn btn-danger btn-sm mx-1">Delete</button>
                                 <button @click="view(list)" class="btn btn-secondary btn-sm mx-1">View</button>
@@ -85,18 +84,6 @@ export default {
                         alert("Failed to delete list. Please try again later.");
                     });
             }
-        },
-        share(list) {
-            const listID = list.list_id;
-            const currentURL = window.location.origin + '/share/list/' + listID;
-            navigator.clipboard.writeText(currentURL)
-                .then(() => {
-                    console.log('URL copied to clipboard:', currentURL);
-                    alert("Link has been copied to clipboard.");
-                })
-                .catch((error) => {
-                    console.error('Failed to copy URL to clipboard:', error);
-                });
         },
         createList() {
             this.showCreateListPopup = true;

@@ -14,7 +14,6 @@
             <div class="task-actions col-12 col-sm-4 mt-2 mt-sm-0">
                 <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
                     <button class="btn btn-primary" @click="editTask(task)">Edit</button>
-                    <button class="btn btn-success" @click="shareTask(task)">Share</button>
                     <button class="btn btn-danger" @click="deleteTask(task.task_id)">Delete</button>
                 </div>
             </div>
@@ -60,19 +59,6 @@ export default {
                 })
                 .catch((error) => {
                     console.error(error);
-                });
-        },
-        shareTask(task) {
-            const taskId = task.task_id;
-            const currentURL = window.location.origin + '/share/task/' + taskId;
-
-            navigator.clipboard.writeText(currentURL)
-                .then(() => {
-                    console.log('URL copied to clipboard:', currentURL);
-                    alert("Link has been copied to clipboard.");
-                })
-                .catch((error) => {
-                    console.error('Failed to copy URL to clipboard:', error);
                 });
         },
         deleteTask(taskid) {

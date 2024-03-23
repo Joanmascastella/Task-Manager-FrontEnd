@@ -77,8 +77,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Feedback Message -->
     <div v-if="feedbackMessage" :class="['feedback', { 'success': isSuccess, 'error': !isSuccess }]">
       {{ feedbackMessage }}
     </div>
