@@ -266,6 +266,12 @@ p {
     color: #CCCCCC;
     flex: 1;
     margin: 0 5px;
+    transition: all 0.5s ease;
+}
+
+.btn:hover {
+    background-color: #d0c4c4;
+    color: #333333;
 }
 
 #stop {
