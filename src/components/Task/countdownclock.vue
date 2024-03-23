@@ -129,20 +129,23 @@ export default {
                 }, 1000);
             }
         },
-
         stopTimer() {
             if (this.timer !== null) {
                 clearInterval(this.timer);
                 this.timer = null;
-                this.totalTime += Math.round((Date.now() - this.startTime) / 1000);
+                const elapsedTimeInSeconds = Math.round((Date.now() - this.startTime) / 1000);
+                this.totalTime += elapsedTimeInSeconds;
+
                 console.log(`Total time: ${this.totalTime} seconds`);
+
+                if (this.selectedTask && this.selectedTask.task_id) {
+                    this.selectedTask.time_elapsed = (this.selectedTask.time_elapsed || 0) + elapsedTimeInSeconds;
+                    this.updateTaskTime(this.selectedTask.task_id, this.selectedTask);
+                }
             }
         },
-
         clearTimer() {
-            if (this.timer !== null) {
-                this.stopTimer();
-            }
+            this.stopTimer();
             this.currentMode = 'Please Select Task';
             this.timeLeft = 0;
             this.selectedTask = "";
@@ -159,7 +162,6 @@ export default {
         selectTask(task) {
             this.selectedTask = task;
         },
-
         getAllTasks() {
             this.$axios.get("/tasks")
                 .then(response => {
@@ -167,6 +169,15 @@ export default {
                 })
                 .catch((error) => {
                     console.error(error);
+                });
+        },
+        updateTaskTime(taskId, updatedTask) {
+            this.$axios.put("/tasks/time/" + taskId, updatedTask)
+                .then(response => {
+                    console.log('Task time updated successfully', response.data);
+                })
+                .catch(error => {
+                    console.error('Error updating task time', error);
                 });
         }
 
