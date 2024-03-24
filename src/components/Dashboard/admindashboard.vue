@@ -17,7 +17,7 @@
         <div class="user-table-container">
           <h2 class="dashboard-subtitle">Active users</h2>
           <p>Edit user details</p>
-          <div class="table-responsive"> 
+          <div class="table-responsive">
             <table class="table table-hover mt-4">
               <thead>
                 <tr>
@@ -35,13 +35,20 @@
                   <td>{{ user.email }}</td>
                   <td>{{ user.role }}</td>
                   <td>
-                    <button @click="prepareEditModal(user)" class="btn btn-primary" style="margin-right: 10px;">Edit</button>
+                    <button @click="prepareEditModal(user)" class="btn btn-primary"
+                      style="margin-right: 10px;">Edit</button>
                     <button @click="deleteAccount(user.user_id)" class="btn btn-danger">Delete</button>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
+          <div class="pagination-controls">
+            <button @click="previousPage" :disabled="currentPage <= 1" class="btn btn-dark" style="margin-right: 6px;">Previous</button>
+            <span>Page {{ currentPage }}</span>
+            <button @click="nextPage" class="btn btn-dark" style="margin-left: 6px;">Next</button>
+          </div>
+
         </div>
       </div>
     </div>
@@ -102,16 +109,30 @@ export default {
       feedbackMessage: '',
       isSuccess: false,
       showModal: false,
+      currentPage: 1,
+      limit: 10,
     };
   },
   methods: {
+    nextPage() {
+        this.currentPage++;
+        this.getAllLists();
+    },
+    previousPage() {
+        if (this.currentPage > 1) {
+            this.currentPage--;
+            this.getAllLists();
+        }
+    },
     fetchUsers() {
-      this.$axios.get("/user").then(response => {
+      const offset = (this.currentPage - 1) * this.limit;
+      this.$axios.get(`/user?limit=${this.limit}&offset=${offset}`).then(response => {
         this.users = response.data;
       }).catch(error => {
         console.error("Failed to get all users", error);
       });
     },
+
     prepareEditModal(user) {
       this.editableUser = { ...user };
       this.showModal = true;
@@ -154,8 +175,6 @@ export default {
 </script>
 
 <style scoped>
-
-
 .analytics-container {
   padding: 20px;
   border: 1px solid #ccc;
@@ -178,7 +197,7 @@ export default {
 
 .analytics-row {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   gap: 20px;
 
 }

@@ -20,6 +20,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div v-else class="p-3 text-center">
                     <p>No lists found. Create one!</p>
                 </div>
@@ -33,7 +34,14 @@
             @close="toggleEditListPopup(false)" @list-updated="listUpdated"></edit-list-popup>
         <create-list-popup v-if="showCreateListPopup" :is-visible="showCreateListPopup" @close="cancelCreateList">
         </create-list-popup>
+        <div class="pagination-controls">
+            <button @click="previousPage" :disabled="currentPage <= 1" class="btn btn-dark"
+                style="margin-right: 6px;">Previous</button>
+            <span>Page {{ currentPage }}</span>
+            <button @click="nextPage" class="btn btn-dark" style="margin-left: 6px;">Next</button>
+        </div>
     </div>
+
 </template>
 
 <script>
@@ -56,6 +64,8 @@ export default {
             showViewList: false,
             selectedListForEdit: null,
             showEditListPopup: false,
+            currentPage: 1,
+            limit: 10,
         }
     },
     methods: {
@@ -64,7 +74,8 @@ export default {
             this.showViewList = true;
         },
         getAllLists() {
-            this.$axios.get('/lists')
+            const offset = (this.currentPage - 1) * this.limit;
+            this.$axios.get(`/lists?limit=${this.limit}&offset=${offset}`)
                 .then(response => {
                     this.listsItems = response.data;
                 })
@@ -83,6 +94,16 @@ export default {
                         console.error('Failed to delete list:', error);
                         alert("Failed to delete list. Please try again later.");
                     });
+            }
+        },
+        nextPage() {
+            this.currentPage++;
+            this.getAllLists();
+        },
+        previousPage() {
+            if (this.currentPage > 1) {
+                this.currentPage--;
+                this.getAllLists();
             }
         },
         createList() {
