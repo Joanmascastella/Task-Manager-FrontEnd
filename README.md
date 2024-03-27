@@ -1,21 +1,27 @@
-# Vue JWT starter project
 
-This project is meant as a starting point for a lecture about adding JWT authentication and state management to a vue app
+---
 
-## Project Setup
+**This is the frontend of the Task Manager Project for Web Development 2.**
 
-```sh
-npm install
-```
+**Login Information:**
 
-### Compile and Hot-Reload for Development
+- **Normal User:**
+  - Email: `m@gmail.com`
+  - Password: `marta`
 
-```sh
-npm run dev
-```
+- **Admin:**
+  - Email: `joan.idevelop@gmail.com`
+  - Password: `admin`
 
-### Compile and Minify for Production
+**Project Description:**
 
-```sh
-npm run build
-```
+My intention for this project was to create a task manager that allows a user to:
+- Create tasks
+- Organize them in lists
+- Keep track of how much time they have worked on those tasks.
+
+Additionally, I've implemented functionality for both admins and users to view basic analytics, including:
+- The number of tasks created
+- Completion rates of those tasks.
+
+--- 
